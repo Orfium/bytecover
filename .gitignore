@@ -127,3 +127,23 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# JSON files
+*.json
+*.jsonl
+
+# Run outputs and saved models
+outputs/run-*
+
+# Code only for debugging and testing
+*_debug.py
+
+# Path files
+*.pt
+*.pth
+
+# Wandb
+wandb/
+
+# Output folders
+output*

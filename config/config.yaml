@@ -1,0 +1,50 @@
+data_path: data
+dataset_path: /data/shs100k
+save_model_path: models
+debug: True
+progress_bar: True
+device: cuda:0
+num_channels: 1
+wandb: False
+
+train:
+  mixed_precision: True
+  target_sr: 22050
+  compress_ratio: 20
+  max_seq_len: [100, 150, 200]
+  num_classes: 10000
+  triplet_margin: 0.3
+  smooth_factor: 0.1
+  model_ckpt: null
+  batch_size: 8
+  num_workers: 0
+  shuffle: True
+  drop_last: True
+  epochs: 1
+  learning_rate: 0.0001
+  patience: 4
+  tempo_factors: [0.7, 1.3]
+  log_steps: 20
+
+val:
+  target_sr: 22050
+  compress_ratio: 20
+  save_val_outputs: True
+  max_seq_len: -1
+  batch_size: 1
+  num_workers: 8
+  shuffle: False
+  drop_last: False
+  output_dir: outputs_val
+
+test:
+  target_sr: 22050
+  compress_ratio: 20
+  save_test_outputs: True
+  model_ckpt: null
+  max_seq_len: -1
+  batch_size: 1
+  num_workers: 8
+  shuffle: False
+  drop_last: False
+  output_dir: outputs_test

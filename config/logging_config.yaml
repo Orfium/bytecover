@@ -1,0 +1,26 @@
+version: 1
+disable_existing_loggers: False
+
+
+formatters:
+  simple_request_id:
+    format: "{{\"timestamp\":\"{asctime}\", \"level\":\"{levelname}\", \"name\":\"{name}\", \"message\":\"{message}\"}}"
+    style: '{'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: simple_request_id
+    stream: ext://sys.stdout
+    filters: [ ]
+
+loggers:
+  bytecover:
+    level: INFO
+    handlers: [ console ]
+    propagate: no
+
+root:
+  level: INFO
+  handlers: [ console ]
