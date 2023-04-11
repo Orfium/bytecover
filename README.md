@@ -37,5 +37,5 @@ If you want to train the model using real audio download the dataset using the `
 
 Once everything is configured the training can start using the following command
 ```
-poetry run train
+poetry run bytecover
 ```
