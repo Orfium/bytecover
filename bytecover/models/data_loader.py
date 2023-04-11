@@ -108,7 +108,7 @@ class ByteCoverDataset(Dataset):
             )
         except ffmpeg.Error as e:
             raise RuntimeError(
-                f"{bcolors.WARNING}Failed to load audio {bcolors.FAIL + filename + bcolors.ENDC}:\n{e.stderr.decode()}"
+                f"{bcolors.WARNING}Failed to load audio:{bcolors.FAIL + filename + bcolors.ENDC}\n{e.stderr.decode()}"
             ) from e
 
         # int16 ranges between -2^15 and +2^15 (±32768). By convention, floating point audio data is

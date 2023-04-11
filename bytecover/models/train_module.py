@@ -13,10 +13,9 @@ from bytecover.models.data_model import BatchDict, Postfix, TestResults, ValDict
 from bytecover.models.early_stopper import EarlyStopper
 from bytecover.models.modules import Bottleneck, Resnet50
 from bytecover.models.utils import (
-    average_precision,
+    calculate_ranking_metrics,
     dataloader_factory,
     dir_checker,
-    rank_one,
     save_best_log,
     save_logs,
     save_predictions,
@@ -230,9 +229,8 @@ class TrainModule:
         anchor_ids = np.stack(list(outputs.keys()))
         preds = torch.stack(list(outputs.values()))[:, 1]
         self.postfix["val_loss"] = val_loss.mean().item()
-        ranks = rank_one(embeddings=preds.numpy(), cliques=clique_ids)
+        ranks, average_precisions = calculate_ranking_metrics(embeddings=preds.numpy(), cliques=clique_ids)
         self.postfix["mr1"] = ranks.mean()
-        average_precisions = average_precision(embeddings=preds.numpy(), cliques=clique_ids)
         self.postfix["mAP"] = average_precisions.mean()
         return {
             "triplet_ids": np.stack(list(zip(clique_ids, anchor_ids, pos_ids, neg_ids))),
@@ -283,8 +281,7 @@ class TrainModule:
     def test_epoch_end(self, outputs: Dict[str, torch.Tensor], clique_ids: List[int]) -> Dict[str, np.ndarray]:
         anchor_ids = np.stack(list(outputs.keys()))
         preds = torch.stack(list(outputs.values()))
-        ranks = rank_one(embeddings=preds.numpy(), cliques=clique_ids)
-        average_precisions = average_precision(embeddings=preds.numpy(), cliques=clique_ids)
+        ranks, average_precisions = calculate_ranking_metrics(embeddings=preds.numpy(), cliques=clique_ids)
         self.test_results["test_mr1"] = ranks.mean()
         self.test_results["test_mAP"] = average_precisions.mean()
         return {

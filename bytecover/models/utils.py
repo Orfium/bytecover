@@ -1,7 +1,8 @@
 import glob
 import json
 import os
-from typing import Dict, List
+import re
+from typing import Dict, List, Tuple
 
 import jsonlines
 import numpy as np
@@ -55,7 +56,7 @@ def validation_triplet_sampling(anchor_id: str, val_ids: List[str], df: pd.DataF
     return dict(pos_id=pos_id, neg_id=neg_id)
 
 
-def rank_one(embeddings: np.ndarray, cliques: List[int]) -> np.ndarray:
+def calculate_ranking_metrics(embeddings: np.ndarray, cliques: List[int]) -> Tuple[np.ndarray, np.ndarray]:
     distances = pairwise_distances(embeddings)
     s_distances = np.argsort(distances, axis=1)
     cliques = np.array(cliques)
@@ -67,26 +68,16 @@ def rank_one(embeddings: np.ndarray, cliques: List[int]) -> np.ndarray:
 
     ranks = mask.argmax(axis=1)
 
-    return ranks
-
-
-def average_precision(embeddings: np.ndarray, cliques: List[int]) -> np.ndarray:
-    distances = pairwise_distances(embeddings)
-    s_distances = np.argsort(distances, axis=1)
-    cliques = np.array(cliques)
-    query_cliques = cliques[s_distances[:, 0]]
-    search_cliques = cliques[s_distances[:, 1:]]
-
-    query_cliques = np.tile(query_cliques, (search_cliques.shape[-1], 1)).T
-    mask = np.equal(search_cliques, query_cliques)
     cumsum = np.cumsum(mask, axis=1)
     mask2 = mask * cumsum
     mask2 = mask2 / np.arange(1, mask2.shape[-1] + 1)
-    average_precision = np.sum(mask2, axis=1) / np.sum(mask, axis=1)
-    return average_precision
+    average_precisions = np.sum(mask2, axis=1) / np.sum(mask, axis=1)
+
+    return (ranks, average_precisions)
 
 
 def dir_checker(output_dir: str) -> str:
+    output_dir = re.sub(r"run-[0-9]+/*", "", output_dir)
     runs = glob.glob(os.path.join(output_dir, "run-*"))
     if runs != []:
         max_run = max(map(lambda x: int(x.split("-")[-1]), runs))
