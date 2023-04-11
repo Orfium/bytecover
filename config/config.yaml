@@ -1,4 +1,5 @@
 data_path: data
+file_extension: mp3
 dataset_path: /data/shs100k
 save_model_path: models
 debug: True

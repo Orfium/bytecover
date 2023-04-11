@@ -17,6 +17,7 @@ class ByteCoverDataset(Dataset):
     def __init__(
         self,
         data_path: str,
+        file_ext: str,
         dataset_path: str,
         data_split: Literal["TRAIN", "VAL", "TEST"],
         debug: bool,
@@ -25,6 +26,7 @@ class ByteCoverDataset(Dataset):
     ) -> None:
         super().__init__()
         self.data_path = data_path
+        self.file_ext = file_ext
         self.dataset_path = dataset_path
         self.data_split = data_split
         self.debug = debug
@@ -96,7 +98,7 @@ class ByteCoverDataset(Dataset):
         if self.debug:
             seq_len = np.random.randint(10, 200) if self.max_len <= 0 else self.max_len
             return torch.rand(seq_len * self.target_sr)
-        filename = os.path.join(self.dataset_path, f"{track_id}.mp4")
+        filename = os.path.join(self.dataset_path, f"{track_id}.{self.file_ext}")
 
         try:
             # This launches a subprocess to decode audio while down-mixing and resampling as necessary.
@@ -132,6 +134,7 @@ class ByteCoverDataset(Dataset):
 
 def bytecover_dataloader(
     data_path: str,
+    file_ext: str,
     dataset_path: str,
     data_split: Literal["TRAIN", "VAL", "TEST"],
     debug: bool,
@@ -141,7 +144,7 @@ def bytecover_dataloader(
     **config: Dict,
 ) -> DataLoader:
     return DataLoader(
-        ByteCoverDataset(data_path, dataset_path, data_split, debug, target_sr=target_sr, max_len=max_len),
+        ByteCoverDataset(data_path, file_ext, dataset_path, data_split, debug, target_sr=target_sr, max_len=max_len),
         batch_size=batch_size if max_len > 0 else 1,
         num_workers=config["num_workers"],
         shuffle=config["shuffle"],

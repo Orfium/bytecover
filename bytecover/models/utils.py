@@ -23,6 +23,7 @@ def dataloader_factory(config: Dict, data_split: str) -> List[DataLoader]:
             t_loaders.append(
                 bytecover_dataloader(
                     data_path=config["data_path"],
+                    file_ext=config["file_extension"],
                     dataset_path=config["dataset_path"],
                     data_split=data_split,
                     debug=config["debug"],
@@ -35,6 +36,7 @@ def dataloader_factory(config: Dict, data_split: str) -> List[DataLoader]:
     return [
         bytecover_dataloader(
             data_path=config["data_path"],
+            file_ext=config["file_extension"],
             dataset_path=config["dataset_path"],
             data_split=data_split,
             debug=config["debug"],
