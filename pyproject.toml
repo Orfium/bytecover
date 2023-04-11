@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "bytecover"
+version = "0.1.0"
+description = ""
+authors = ["petvav <peter@orfium.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+ffmpeg-python = "^0.2.0"
+jsonlines = "^3.1.0"
+nnaudio = "^0.3.2"
+numpy = "~1.23"
+optuna = "^3.1.0"
+pandas = "^2.0.0"
+protobuf = "^3.20"
+python = "^3.10"
+pyyaml = "^6.0"
+scikit-learn = "^1.2.2"
+torch = "^2.0.0"
+torchaudio = "^2.0.1"
+torchvision = "^0.15.1"
+tqdm = "^4.65.0"
+wandb = "^0.14.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+pre-commit = "^3.2.2"
+pylint = "^2.17.2"
+
+[tool.poetry.scripts]
+bytecover = "bytecover.__main__:_"
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]

@@ -1,0 +1,37 @@
+name: CI/CD
+
+on:
+  pull_request:
+    branches:
+      - "master"
+
+jobs:
+  unittest:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set python path
+        run: echo "PYTHONPATH=$(pwd)/src:$(pwd)" >> $GITHUB_ENV
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: 1.2.2
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-all-${{ hashFiles('**/poetry.lock') }}
+      - name: Install poetry dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: |
+          poetry install --no-interaction --no-root
+      - name: Run pre-commit
+        run: |
+          source .venv/bin/activate
+          pre-commit run --from-ref refs/remotes/origin/${{ github.base_ref }} --to-ref refs/remotes/origin/${{ github.head_ref }}
