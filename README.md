@@ -39,3 +39,7 @@ Once everything is configured the training can start using the following command
 ```
 poetry run bytecover
 ```
+
+## Model Checkpoint
+We have made our best model checkpoint publicly available. You can access it through the following link:
+https://orfium-research-papers.s3.amazonaws.com/bytecover/orfium-bytecover.pt
