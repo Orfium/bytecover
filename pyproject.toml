@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "bytecover"
 version = "0.1.0"
-description = ""
-authors = ["petvav <peter@orfium.com>"]
+description = "Implementation of 'Bytecover: Cover song identification via multi-loss training' paper (ICASSP 2021)"
+authors = ["Petros Vavaroutsos <peter@orfium.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
